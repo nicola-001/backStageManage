@@ -2,7 +2,7 @@
 import request from "@/untils/request";
 import type {ApartmantAllData, AreaAllData, CityAllData, DeleteAllData, ProvinceAllData} from "@/api/apartment/type";
 
-//枚举公寓管理的所有接口
+//枚举公寓管理的所有接口s
 enum API {
 //     根据条件分页查询公寓列表
     APARTMENT_URL = '/admin/apartment/pageItem?',
@@ -15,7 +15,9 @@ enum API {
 //    根据id删除公寓信息
     REMOVEBYID_URL = '/admin/apartment/removeById?',
 //     新增或更新用户信息
-    SAVEOORUPDATE_YRL = '/admin/apartment/saveOrUpdate'
+    SAVEOORUPDATE_YRL = '/admin/apartment/saveOrUpdate',
+//     获取公寓杂费
+    FEELIST_URL = '/admin/fee/list'
 }
 
 //根据条件分页查询公寓列表
@@ -38,3 +40,5 @@ export const reqSaveOrUpdate = (data: any) => {
         return request.post(API.SAVEOORUPDATE_YRL, data)
     }
 }
+// 获取公寓杂费
+export const reqFeeList = () => request.get(API.FEELIST_URL)
