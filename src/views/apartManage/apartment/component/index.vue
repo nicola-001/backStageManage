@@ -75,7 +75,8 @@ watch(() => addOrUpdateData.value.cityId, async (newCityId) => {
 const getFeeList = async () => {
   const result = await reqFeeList()
   if (result.code == 200) {
-   feeValueIds.value = result.data
+    feeValueIds.value = result.data
+    console.log(feeValueIds.value)
   }
 }
 // 挂载时
