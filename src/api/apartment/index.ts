@@ -1,11 +1,18 @@
 // 公寓管理接口
 import request from "@/untils/request";
-import type {ApartmantAllData, AreaAllData, CityAllData, DeleteAllData, ProvinceAllData} from "@/api/apartment/type";
+import type {
+    ApartmantAllData, ApartmantQueryForm,
+    AreaAllData,
+    CityAllData,
+    DeleteAllData,
+    FeeValueListAllData,
+    ProvinceAllData
+} from "@/api/apartment/type";
 
 //枚举公寓管理的所有接口s
 enum API {
 //     根据条件分页查询公寓列表
-    APARTMENT_URL = '/admin/apartment/pageItem?',
+    APARTMENT_URL = '/admin/apartment/pageItem',
     //获取查询省份信息列表
     PROVINCELIST_URL = '/admin/region/province/list?',
 //     根据省份id获取城市信息列表
@@ -16,12 +23,14 @@ enum API {
     REMOVEBYID_URL = '/admin/apartment/removeById?',
 //     新增或更新用户信息
     SAVEOORUPDATE_YRL = '/admin/apartment/saveOrUpdate',
+//     根据类型查询列表标签
+    LABEL_LIST_URL = '/admin/label/list?',
 //     获取公寓杂费
     FEELIST_URL = '/admin/fee/list'
 }
 
 //根据条件分页查询公寓列表
-export const reqApartment = (current: number, size: number, provinceId: number, cityId: number, districtId: number) => request.get<any, ApartmantAllData>(API.APARTMENT_URL + `current=${current}&size=${size}&provinceId=${provinceId}&cityId=${cityId}&districtId=${districtId}`)
+export const reqApartment = (queryForm:ApartmantQueryForm) => request.get<any, ApartmantAllData>(API.APARTMENT_URL ,{params:queryForm})
 //获取查询省份信息列表
 export const reqListByProvince = () => request.get<any, ProvinceAllData>(API.PROVINCELIST_URL)
 // 根据省份id获取城市列表
@@ -40,5 +49,7 @@ export const reqSaveOrUpdate = (data: any) => {
         return request.post(API.SAVEOORUPDATE_YRL, data)
     }
 }
+// 根据类型获取查询列表标签
+export const reqLabelList = (type: number) => request.get(API.LABEL_LIST_URL + `type=${type}`)
 // 获取公寓杂费
-export const reqFeeList = () => request.get(API.FEELIST_URL)
+export const reqFeeList = () => request.get<any, FeeValueListAllData>(API.FEELIST_URL)

@@ -6,6 +6,11 @@ export interface ResponseData {
     ok: boolean,
 }
 
+export interface queryForm{
+    current:number;
+    size:number;
+}
+
 //公寓管理返回data数据类型
 export interface Records {
     id?: number;
@@ -35,6 +40,13 @@ export interface Data {
     records: Records[],
     total: number,
     pages: number
+}
+
+//公寓管理查询列表query数据类型
+export interface ApartmantQueryForm extends queryForm{
+    provinceId?:string,
+    cityId?:string,
+    districtId?:string
 }
 
 // 公寓管理返回数据类型
@@ -79,4 +91,22 @@ export interface DeleteData {
 
 export interface DeleteAllData extends ResponseData {
     data: DeleteAllData
+}
+
+//查询全部杂费名称和杂费列表的数据
+export interface FeeValueData {
+    id: number;
+    name: string;
+    feeValueList: {
+        id: number;
+        name: string;
+        unit: string;
+        feeKeyId: number;
+    }[];
+}
+
+//获取查询全部杂费名称和杂费列表的数据
+export interface FeeValueListAllData extends ResponseData {
+    data: FeeValueData[]
+
 }

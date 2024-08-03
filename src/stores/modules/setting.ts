@@ -10,3 +10,14 @@ const useLayOutsettingStore = defineStore('SettingStore', {
     },
 })
 export default useLayOutsettingStore
+
+
+/**
+ * ()=>{
+ *         const fold =ref(false);//用于控制菜单是否折叠
+ *         const refresh=ref(false)//控制刷新效果
+ *     return{
+ *         fold,refresh
+ *     }
+ * }
+ */

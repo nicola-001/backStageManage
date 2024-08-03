@@ -4,22 +4,24 @@ import {defineModel} from "vue";
 defineOptions({
   name: 'PagiNation'
 })
-const pageSize=defineModel("size");
-const pageNum=defineModel("current");
-const total=defineModel("total")
+// 定义响应式状态变量
+const pageSize = defineModel("size");
+const pageNum = defineModel("current");
+const total = defineModel("total")
 
 // 接收父组件传递过来的参数
 const $emit = defineEmits(['getTableData'])
 
 // 每页几条数据发生改变
-function handleSizeChange(size:number) {
-  pageSize.value=size
-  $emit('getTableData',pageNum)
-
+function handleSizeChange(size: number) {
+  pageSize.value = size
+  $emit('getTableData')
 }
-const handleCurrentChange=(current:number)=>{
-  pageNum.value=current
-  $emit('getTableData',pageNum)
+
+// 当前第几页发生变化
+const handleCurrentChange = (current: number) => {
+  pageNum.value = current
+  $emit('getTableData')
 }
 </script>
 

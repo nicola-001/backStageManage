@@ -9,8 +9,8 @@ import {Delete, Download, Plus, ZoomIn} from '@element-plus/icons-vue'
 
 import type {UploadFile} from 'element-plus'
 import router from "@/router";
-import {reqAreaList, reqFeeList, reqListByProvince, reqListCity} from "@/api/apartment";
-import type {ProvinceAllData, ProvinceData} from "@/api/apartment/type";
+import {reqAreaList, reqFeeList, reqLabelList, reqListByProvince, reqListCity} from "@/api/apartment";
+import type {FeeValueData, FeeValueListAllData, ProvinceAllData, ProvinceData} from "@/api/apartment/type";
 import {all} from "axios";
 // 取消按钮的回调
 const cancel = () => {
@@ -25,7 +25,7 @@ const addOrUpdateData = ref({
   introduction: "",//公寓介绍
   addressDetail: "",//详细地址
   phone: "",//公寓前台电话
-  isRelease: "",//是否发布
+  isRelease: 0,//是否发布
   feeValueIds: [],//获取公寓杂费
 
 })
@@ -36,7 +36,7 @@ const cityData = ref()
 // 存储区域数据
 const areaData = ref()
 // 存储公寓杂费
-const feeValueIds = ref([])
+const feeValueIds = ref()
 // 获取省份信息
 const getListByProvince = async () => {
   const result: ProvinceAllData = await reqListByProvince()
@@ -71,18 +71,24 @@ watch(() => addOrUpdateData.value.cityId, async (newCityId) => {
     await getAreaList(newCityId);
   }
 })
+// 获取公寓标签
+const getLabelList = async () => {
+  const result = await reqLabelList(1)
+  console.log(result)
+}
 // 获取公寓杂费
 const getFeeList = async () => {
-  const result = await reqFeeList()
+  const result: FeeValueListAllData = await reqFeeList()
   if (result.code == 200) {
     feeValueIds.value = result.data
-    console.log(feeValueIds.value)
   }
 }
 // 挂载时
 onMounted(() => {
 //   获取省份信息
   getListByProvince()
+//   获取公寓标签
+  getLabelList()
 //   获取公寓杂费
   getFeeList()
 })
@@ -179,17 +185,17 @@ const handleDownload = (file: UploadFile) => {
           </el-form-item>
           <el-form-item label="是否发布" label-width="100">
             <el-radio-group v-model="addOrUpdateData.isRelease">
-              <el-radio value="1" size="small">未发布</el-radio>
-              <el-radio value="0" size="small">已发布</el-radio>
+              <el-radio :value="0" size="small">未发布</el-radio>
+              <el-radio :value="1" size="small">已发布</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="公寓配套" label-width="100" style="width: 40%">
-            <el-select v-model="value" placeholder="请选择公寓配套">
+            <el-select v-model="addOrUpdateData.feeValueIds" placeholder="请选择公寓配套">
               <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  v-for="item in feeValueIds"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
               />
             </el-select>
           </el-form-item>
@@ -204,12 +210,12 @@ const handleDownload = (file: UploadFile) => {
             </el-select>
           </el-form-item>
           <el-form-item label="公寓杂费" label-width="100" style="width: 40%">
-            <el-select v-model="value" placeholder="请选择公寓杂费">
+            <el-select v-model="addOrUpdateData.feeValueIds" placeholder="请选择公寓杂费">
               <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  v-for="item in feeValueIds"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
               />
             </el-select>
           </el-form-item>
