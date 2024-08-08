@@ -134,3 +134,23 @@ export interface FeeValueData {
 export interface FeeValueListAllData extends ResponseData {
     data: FeeValueData[]
 }
+//图片泛型定义
+export interface ImgList {
+    name: string,
+    url: string,
+}
+// 保存或更新公寓信息的接口类型
+export interface SaveOrUpdateData{
+    name: string|null,//公寓名称
+    provinceId: number|null,//省份id
+    cityId: number|null,//城市id
+    districtId: number|null,//区域id
+    introduction:string|null,//公寓介绍
+    addressDetail: string|null,//详细地址
+    phone: string|null,//公寓前台电话
+    isRelease: number,//是否发布
+    feeValueIds: [],//获取公寓杂费
+    labelIds: null,//公寓标签
+    facilityInfoIds: [],//公寓配套
+    graphVoList: ImgList[],
+}

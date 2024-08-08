@@ -4,8 +4,8 @@ import BottomLogo from "@/components/BottomLogo/index.vue";
 defineOptions({
   name: 'addOrUpdatePage'
 })
-import {onMounted, ref, watch} from 'vue'
-import {Delete, Plus, ZoomIn} from '@element-plus/icons-vue'
+import {onMounted, reactive, ref, watch} from 'vue'
+import {Plus} from '@element-plus/icons-vue'
 
 import type {UploadFile} from 'element-plus'
 import router from "@/router";
@@ -20,9 +20,9 @@ import {
 } from "@/api/apartment";
 import type {
   FacilityListALLData,
-  FeeValueListAllData,
+  FeeValueListAllData, ImgList,
   LabelListAllData,
-  ProvinceAllData, ResponseData,
+  ProvinceAllData, SaveOrUpdateData,
 } from "@/api/apartment/type";
 import messageBox from "@/untils/MessageBox";
 
@@ -32,7 +32,7 @@ const cancel = () => {
   router.push({name: "Apart"})
 }
 // 准备数据
-const addOrUpdateData = ref({
+const addOrUpdateData: SaveOrUpdateData = reactive({
   name: "",//公寓名称
   provinceId: null,//省份id
   cityId: null,//城市id
@@ -44,10 +44,7 @@ const addOrUpdateData = ref({
   feeValueIds: [],//获取公寓杂费
   labelIds: null,//公寓标签
   facilityInfoIds: [],//公寓配套
-  graphVoList: [{ //图片信息
-    name: "", //图片名称
-    url: ""
-  }],
+  graphVoList: [],
 })
 // 存储省份数据
 const provinceData = ref()
@@ -76,7 +73,7 @@ const getCityList = async (provinceId: number) => {
   }
 }
 //监听省份id获取城市信息
-watch(() => addOrUpdateData.value.provinceId, async (newProvinceId) => {
+watch(() => addOrUpdateData.provinceId, async (newProvinceId) => {
   //只有newProvinceId不为null或undefined时 才调用 getCityList
   if (newProvinceId !== null && newProvinceId !== undefined) {
     await getCityList(newProvinceId);
@@ -90,7 +87,7 @@ const getAreaList = async (cityId: number) => {
   }
 }
 // 监听城市id获取区域信息
-watch(() => addOrUpdateData.value.cityId, async (newCityId) => {
+watch(() => addOrUpdateData.cityId, async (newCityId) => {
   if (newCityId !== null && newCityId !== undefined) {
     await getAreaList(newCityId);
   }
@@ -134,31 +131,31 @@ const dialogImageUrl = ref('')
 
 // 预览的回调
 const handlePictureCardPreview = (file: UploadFile) => {
-  console.log('file', file)
   // 在swift中，file.url返回的是一个可选值，url?类型，
   // 这意味着也可能包含一个Url或者是nil，！是强制解包的方法，表示确定这个是一个可选值
   dialogImageUrl.value = file.url!
+  console.log('23132312312', file.url)
   dialogVisible.value = true
 }
 
-// 删除照片的回调
-const handleRemove = () => {
-  console.log('删除！')
+// 上传之前的回调
+const beforeUpdate = async (file: any) => {
+  console.log(file)
+  // 返回false阻止默认行为 不往文件列表中添加该文件 可以在onChange钩子中手动添加
+  return false;
 }
 // 图片改变的回调
 const handleChange = async (file: any) => {
-//   构造formatData的实例
+  console.log(1489784518)
+  //   构造formatData的实例
   const formData = new FormData()
   console.log(file)
   formData.append('file', file.raw);
   const result = await reqFileUload(formData);
   if (result.code == 200) {
-    console.log(result)
-    const url = result.data
-    addOrUpdateData.value.graphVoList.push({
-      name: 'image',
-      url: url,
-    })
+    const imgObj: ImgList = {name: file.name, url: result.data,}
+    addOrUpdateData.graphVoList.push(imgObj)
+    console.log('32432432434344422432', imgObj)
     messageBox.messageInfo('success', '上传成功！')
   } else {
     messageBox.messageInfo('error', '上传失败！')
@@ -253,13 +250,13 @@ const handleChange = async (file: any) => {
           </el-form-item>
           <el-form-item label="图片" label-width="100">
             <el-upload
-                v-model:file-list="addOrUpdateData.graphVoList.url"
+                v-model:file-list="addOrUpdateData.graphVoList"
                 action="#"
                 list-type="picture-card"
-                :auto-upload="false"
+                :before-upload="beforeUpdate"
                 :on-change="handleChange"
                 :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove"
+                :http-request="()=>{}"
                 :accept="'image/*'"
                 :limit="5"
             >
