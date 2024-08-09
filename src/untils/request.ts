@@ -13,7 +13,7 @@ const request = axios.create({
     timeout: 5000
 })
 //请求拦截器
-request.interceptors.request.use(config => {
+request.interceptors.request.use(config =>  {
     // 获取user仓库中的数据
     const userStore = useUserStore()
     const token = userStore.token

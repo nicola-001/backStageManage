@@ -140,13 +140,13 @@ const handlePictureCardPreview = (file: UploadFile) => {
 
 // 上传之前的回调
 const beforeUpdate = async (file: any) => {
-  console.log(file)
+  console.log('215487/7454548', file)
   // 返回false阻止默认行为 不往文件列表中添加该文件 可以在onChange钩子中手动添加
   return false;
 }
 // 图片改变的回调
 const handleChange = async (file: any) => {
-  console.log(1489784518)
+  console.log(1489784518, file)
   //   构造formatData的实例
   const formData = new FormData()
   console.log(file)
