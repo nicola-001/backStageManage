@@ -129,28 +129,77 @@ export interface FeeValueData {
         feeKeyId: number;
     }[];
 }
-
+// 树形结构
+export interface TreeData {
+    id?: number | string
+    value?: number | string
+    label: string
+    parentId?: number | string
+    children?: TreeData[]
+}
 //获取查询全部杂费名称和杂费列表的数据
 export interface FeeValueListAllData extends ResponseData {
     data: FeeValueData[]
 }
+
 //图片泛型定义
 export interface ImgList {
     name: string,
     url: string,
 }
-// 保存或更新公寓信息的接口类型
-export interface SaveOrUpdateData{
-    name: string|null,//公寓名称
-    provinceId: number|null,//省份id
-    cityId: number|null,//城市id
-    districtId: number|null,//区域id
-    introduction:string|null,//公寓介绍
-    addressDetail: string|null,//详细地址
-    phone: string|null,//公寓前台电话
+
+// 保存或更新公寓信息发送请求时的接口类型
+export interface SaveOrUpdateData {
+    name: string | null,//公寓名称
+    provinceId: number | null,//省份id
+    cityId: number | null,//城市id
+    districtId: number | null,//区域id
+    introduction: string | null,//公寓介绍
+    addressDetail: string | null,//详细地址
+    phone: string | null,//公寓前台电话
     isRelease: number,//是否发布
-    feeValueIds: [],//获取公寓杂费
+    feeValueIds?: number[],//获取公寓杂费
     labelIds: null,//公寓标签
     facilityInfoIds: [],//公寓配套
     graphVoList: ImgList[],
+}
+
+// 保存或更新公寓信息接收数据时的接口类型
+export interface SaveOrUpdateDataReaultData {
+    id?: number;
+    name?: string;
+    introduction?: string;
+    districtId?: number;
+    districtName?: string;
+    cityId?: number;
+    cityName?: string;
+    provinceId?: number;
+    provinceName?: string;
+    addressDetail?: string;
+    latitude?: string;
+    longitude?: string;
+    phone?: string;
+    isRelease?: string;
+    facilityInfoIds?: Record<string, unknown>[];
+    labelIds?: Record<string, unknown>[];
+    feeValueIds?: Record<string, unknown>[];
+    graphVoList?: {
+        name?: string;
+        url?: string;
+    }[];
+}
+// 保存或更新公寓管理信息时的返回的全部数据
+export interface SaveOrUpdateDataReaultAllData extends ResponseData{
+        data: SaveOrUpdateDataReaultData
+}
+//详情地址建议列表的类型
+export interface addressDetailList {
+    id: [],
+    name: string,
+    district: string | null,
+    adcode: string | null,
+    location: [],
+    address: string | null,
+    typecode: string | null,
+    city: []
 }

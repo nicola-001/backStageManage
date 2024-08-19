@@ -6,7 +6,7 @@ import type {
     CityAllData,
     DeleteAllData, FacilityListALLData,
     FeeValueListAllData, LabelListAllData,
-    ProvinceAllData
+    ProvinceAllData, SaveOrUpdateDataReaultAllData
 } from "@/api/apartment/type";
 
 //枚举公寓管理的所有接口s
@@ -29,9 +29,8 @@ enum API {
     LABEL_LIST_URL = '/admin/label/list?',
 //     获取公寓杂费
     FEELIST_URL = '/admin/fee/list',
-//     上传图片的回调
+//     上传图片
     FILEUPLOAD_URL = '/admin/file/upload',
-
 }
 
 //根据条件分页查询公寓列表
@@ -48,10 +47,10 @@ export const reqRemoveById = (id: number) => request.delete<any, DeleteAllData>(
 export const reqSaveOrUpdate = (data: any) => {
 //     判断是否有id  有id则为修改
     if (data.id) {
-        return request.post(API.SAVEOORUPDATE_YRL, data)
+        return request.post<any,SaveOrUpdateDataReaultAllData>(API.SAVEOORUPDATE_YRL, data)
     } else {
         // 没有id则为新增
-        return request.post(API.SAVEOORUPDATE_YRL, data)
+        return request.post<any,SaveOrUpdateDataReaultAllData>(API.SAVEOORUPDATE_YRL, data)
     }
 }
 //     根据类型查询配套信息列表
