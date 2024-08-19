@@ -77,10 +77,13 @@ const settingData = () => tableManageRef.value.openTable();
 const router = useRouter();
 // 新增公寓
 const addManagement = () => {
+  // 路由跳转
   router.push({name: "addOrUpdatePage"})
 }
 // 修改操作
-const updateOPeration = () => {
+const updateOPeration = (row: any) => {
+  // 路由跳转
+  router.push({name: "addOrUpdatePage", query: {itemDataID: row.id}})
 }
 //获取查询省份信息列表
 const getListByProvince = async () => {
@@ -239,7 +242,7 @@ const deleteItem = async (id: number) => {
         <!--操作-->
         <el-table-column align="center" fixed="right" label="操作" min-width="180">
           <template #default="{row}">
-            <el-button type="success" size="small" :icon="Edit" @click="updateOPeration">修改</el-button>
+            <el-button type="success" size="small" :icon="Edit" @click="updateOPeration(row)">修改</el-button>
             <el-popconfirm :title="`你确定要删除${row.name}吗?`" @confirm="deleteItem(row.id)">
               <template #reference>
                 <el-button type="danger" size="small" :icon="Delete">删除</el-button>

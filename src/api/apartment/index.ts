@@ -5,9 +5,10 @@ import type {
     AreaAllData,
     CityAllData,
     DeleteAllData, FacilityListALLData,
-    FeeValueListAllData, LabelListAllData,
+    FeeValueListAllData, GetDetailAllData, LabelListAllData,
     ProvinceAllData, SaveOrUpdateDataReaultAllData
 } from "@/api/apartment/type";
+import type {LocationQueryValue} from "vue-router";
 
 //枚举公寓管理的所有接口s
 enum API {
@@ -31,6 +32,9 @@ enum API {
     FEELIST_URL = '/admin/fee/list',
 //     上传图片
     FILEUPLOAD_URL = '/admin/file/upload',
+//     根据id获取公寓详情信息
+    GETDETAILBYID = '/admin/apartment/getDetailById?',
+
 }
 
 //根据条件分页查询公寓列表
@@ -47,10 +51,10 @@ export const reqRemoveById = (id: number) => request.delete<any, DeleteAllData>(
 export const reqSaveOrUpdate = (data: any) => {
 //     判断是否有id  有id则为修改
     if (data.id) {
-        return request.post<any,SaveOrUpdateDataReaultAllData>(API.SAVEOORUPDATE_YRL, data)
+        return request.post<any, SaveOrUpdateDataReaultAllData>(API.SAVEOORUPDATE_YRL, data)
     } else {
         // 没有id则为新增
-        return request.post<any,SaveOrUpdateDataReaultAllData>(API.SAVEOORUPDATE_YRL, data)
+        return request.post<any, SaveOrUpdateDataReaultAllData>(API.SAVEOORUPDATE_YRL, data)
     }
 }
 //     根据类型查询配套信息列表
@@ -65,3 +69,5 @@ export const reqFileUload = (file: any) => request.post<any, any>(API.FILEUPLOAD
         'Content-Type': 'multipart/form-data'
     }
 })
+// 根据id获取公寓详情信息
+export const reqDetailById = (id: string | LocationQueryValue[] | null) => request.get<any, GetDetailAllData>(API.GETDETAILBYID + `id=${id}`)

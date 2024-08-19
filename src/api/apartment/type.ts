@@ -129,6 +129,7 @@ export interface FeeValueData {
         feeKeyId: number;
     }[];
 }
+
 // 树形结构
 export interface TreeData {
     id?: number | string
@@ -137,6 +138,7 @@ export interface TreeData {
     parentId?: number | string
     children?: TreeData[]
 }
+
 //获取查询全部杂费名称和杂费列表的数据
 export interface FeeValueListAllData extends ResponseData {
     data: FeeValueData[]
@@ -150,6 +152,7 @@ export interface ImgList {
 
 // 保存或更新公寓信息发送请求时的接口类型
 export interface SaveOrUpdateData {
+    id?: number | string,
     name: string | null,//公寓名称
     provinceId: number | null,//省份id
     cityId: number | null,//城市id
@@ -188,10 +191,12 @@ export interface SaveOrUpdateDataReaultData {
         url?: string;
     }[];
 }
+
 // 保存或更新公寓管理信息时的返回的全部数据
-export interface SaveOrUpdateDataReaultAllData extends ResponseData{
-        data: SaveOrUpdateDataReaultData
+export interface SaveOrUpdateDataReaultAllData extends ResponseData {
+    data: SaveOrUpdateDataReaultData
 }
+
 //详情地址建议列表的类型
 export interface addressDetailList {
     id: [],
@@ -202,4 +207,55 @@ export interface addressDetailList {
     address: string | null,
     typecode: string | null,
     city: []
+}
+
+export interface graphVoListData {
+    name: string;
+    url: string;
+}
+
+export interface labelInfoListData {
+    id: number;
+    type: string;
+    name: string;
+}
+
+export interface facilityInfoListData {
+    id: number;
+    type: string;
+    name: string;
+    icon: string;
+}
+
+export interface feeValueVoListData {
+    id: number;
+    name: string;
+    unit: string;
+    feeKeyId: number;
+    feeKeyName: string;
+}
+
+//根据id获取公寓信息列表
+export interface GetDetailData {
+    id: number;
+    name: string;
+    introduction: string;
+    districtId: number;
+    districtName: string;
+    cityId: number;
+    cityName: string;
+    provinceId: number;
+    provinceName: string;
+    addressDetail: string;
+    latitude: string;
+    longitude: string;
+    phone: string;
+    isRelease: string;
+    graphVoListData: graphVoListData[],
+    labelInfoList: labelInfoListData[],
+    facilityInfoList: facilityInfoListData[],
+    feeValueVoList: feeValueVoListData[]
+}
+export interface GetDetailAllData extends ResponseData{
+    data: GetDetailData;
 }

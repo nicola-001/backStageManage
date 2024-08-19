@@ -10,7 +10,7 @@ import {Plus} from '@element-plus/icons-vue'
 import type {UploadFile} from 'element-plus'
 import router from "@/router";
 import {
-  reqAreaList,
+  reqAreaList, reqDetailById,
   reqFacilityList,
   reqFeeList,
   reqFileUload,
@@ -27,15 +27,18 @@ import type {
 } from "@/api/apartment/type";
 import messageBox from "@/untils/MessageBox";
 import axios from "axios";
-import login from "@/views/login/index.vue";
+import {useRoute} from "vue-router";
 
 
 // 取消按钮的回调
 const cancel = () => {
   router.push({name: "Apart"})
 }
+// 获取表单
+const ruleFormRef = ref()
 // 准备数据
 const addOrUpdateData: SaveOrUpdateData = reactive({
+  id: '',
   name: "",//公寓名称
   provinceId: null,//省份id
   cityId: null,//城市id
@@ -166,6 +169,8 @@ onMounted(() => {
   getLabelList()
 //   获取公寓杂费
   getFeeList()
+//   根据路由传递的id获取已有的公寓详情信息
+  getDetailById(itemDataID)
 })
 // 控制照片遮罩层的显示与隐藏
 const dialogVisible = ref(false)
@@ -176,7 +181,9 @@ const addressDetailOptions = ref<addressDetailList[]>([])
 // 请输入详情地址的加载
 const loading = ref(false)
 
-
+const route = useRoute()
+// 获取传递过来的参数
+let itemDataID = route.query.itemDataID
 // 预览的回调
 const handlePictureCardPreview = (file: UploadFile) => {
   // 在swift中，file.url返回的是一个可选值，url?类型，
@@ -259,17 +266,59 @@ const remoteMethod = (query: string) => {
   debouncedRemoteMethod(query);
 };
 // 新增公寓
-const handleAddApartment = async () => {
-  const result: SaveOrUpdateDataReaultAllData = await reqSaveOrUpdate(addOrUpdateData)
+const handleAddApartment = async (ruleFormRef: any) => {
+  if (!ruleFormRef) return
+  await ruleFormRef.validate(async (valid: any, fields: any) => {
+    if (valid) {
+      const result: SaveOrUpdateDataReaultAllData = await reqSaveOrUpdate(addOrUpdateData)
+      if (result.code == 200) {
+        //   路由跳转
+        await router.push({name: "Apart"})
+        messageBox.messageInfo('success', '操作成功')
+      } else {
+        messageBox.messageInfo('error', '操作失败')
+      }
+    } else {
+      messageBox.messageInfo('error', '表单填写有误，请检查')
+    }
+  })
+
+}
+// 表单规则验证
+const rules = reactive({
+  name: [
+    {required: true, message: '请输入公寓名称', trigger: 'blur'}
+  ],
+  introduction: [
+    {required: true, message: '请输入公寓介绍', trigger: 'blur'}
+  ],
+  provinceId: [
+    {required: true, message: '请选择省份', trigger: 'blur'}
+  ],
+  cityId: [
+    {required: true, message: '请选择城市', trigger: 'blur'}
+  ],
+  districtId: [
+    {required: true, message: '请选择区域', trigger: 'blur'}
+  ],
+  addressDetail: [
+    {required: true, message: '请输入详细地址', trigger: 'blur'}
+  ],
+  phone: [
+    {required: true, message: '请输入公寓前台电话', trigger: 'blur'}
+  ],
+  graphVoList: [
+    {required: true, message: '请上传图片', trigger: 'blur'}
+  ]
+})
+// 用通过路由传递过来的参数发送获取数据的请求
+const getDetailById = async (itemDataID: any) => {
+  const result = await reqDetailById(itemDataID)
   if (result.code == 200) {
-    //   路由跳转
-    await router.push({name: "Apart"})
-    messageBox.messageInfo('success', '添加成功')
-  } else {
-    messageBox.messageInfo('error', '添加失败')
+    // 合并参数
+    Object.assign(addOrUpdateData, result.data)
   }
 }
-
 </script>
 
 <template>
@@ -277,46 +326,55 @@ const handleAddApartment = async () => {
     <div class="container">
       <!--顶部标题-->
       <div class="addHeader">
-        <h1>新增公寓</h1>
+        <h1>{{ addOrUpdateData.id ? '修改公寓' : '新增公寓' }}</h1>
         <el-divider style="margin-top: 15px"/>
       </div>
       <!--form表单-->
       <div class="addBody">
-        <el-form :model="addOrUpdateData">
-          <el-form-item label="公寓名称" label-width="100" style="width: 40%" size="default">
+        <el-form
+            :model="addOrUpdateData"
+            ref="ruleFormRef"
+            :rules="rules"
+        >
+          <el-form-item label="公寓名称" label-width="100" style="width: 40%" size="default" prop="name">
             <el-input v-model="addOrUpdateData.name"/>
           </el-form-item>
-          <el-form-item label="公寓介绍" label-width="100" style="width: 40%" size="small">
+          <el-form-item label="公寓介绍" label-width="100" style="width: 40%" size="small" prop="introduction">
             <el-input type="textarea" v-model:="addOrUpdateData.introduction"/>
           </el-form-item>
-          <el-form-item label="所处区域" label-width="100">
-            <el-select v-model="addOrUpdateData.provinceId" placeholder="请选择省份" style="width: 12%" clearable>
-              <el-option
-                  v-for="item in provinceData"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-              />
-            </el-select>
-            <el-select v-model="addOrUpdateData.cityId" placeholder="请选择城市" style="width: 12%" clearable>
-              <el-option
-                  v-for="item in cityData"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-              />
-            </el-select>
-            <el-select v-model="addOrUpdateData.districtId" placeholder="请选择区域" style="width: 12%" clearable>
-              <el-option
-                  v-for="item in areaData"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-              />
-            </el-select>
+          <el-form-item label="所处区域" label-width="100" required>
+            <el-form-item prop="provinceId" style="width: 180px">
+              <el-select v-model="addOrUpdateData.provinceId" placeholder="请选择省份" clearable>
+                <el-option
+                    v-for="item in provinceData"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item prop="cityId" style="width: 180px">
+              <el-select v-model="addOrUpdateData.cityId" placeholder="请选择城市" clearable>
+                <el-option
+                    v-for="item in cityData"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item prop="districtId" style="width: 180px">
+              <el-select v-model="addOrUpdateData.districtId" placeholder="请选择区域" clearable>
+                <el-option
+                    v-for="item in areaData"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
           </el-form-item>
-          <el-form-item label="详细地址" label-width="100" style="width: 40%">
-            <!--            <el-input clearable placeholder="请输入详细地址查询" v-model="addOrUpdateData.addressDetail"/>-->
+          <el-form-item label="详细地址" label-width="100" style="width: 40%" prop="addressDetail">
             <el-select
                 v-model="addOrUpdateData.addressDetail"
                 filterable
@@ -335,7 +393,7 @@ const handleAddApartment = async () => {
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="公寓前台电话" label-width="100" style="width: 40%">
+          <el-form-item label="公寓前台电话" label-width="100" style="width: 40%" prop="phone">
             <el-input placeholder="请输入公寓前台电话" v-model="addOrUpdateData.phone"/>
           </el-form-item>
           <el-form-item label="是否发布" label-width="100">
@@ -375,7 +433,7 @@ const handleAddApartment = async () => {
                 @node-click="feeNodeClickHandle"
             ></el-tree-select>
           </el-form-item>
-          <el-form-item label="图片" label-width="100">
+          <el-form-item label="图片" label-width="100" prop="graphVoList">
             <el-upload
                 v-model:file-list="addOrUpdateData.graphVoList"
                 action="#"
@@ -401,7 +459,9 @@ const handleAddApartment = async () => {
       <!--底部-->
       <div class="addBottom">
         <el-button type="info" style="width: 120px" @click="cancel">取消</el-button>
-        <el-button type="primary" style="width: 120px" @click="handleAddApartment">新增</el-button>
+        <el-button type="primary" style="width: 120px" @click="handleAddApartment(ruleFormRef)">
+          {{ addOrUpdateData.id ? '修改' : '新增' }}
+        </el-button>
       </div>
       <!--logo-->
       <BottomLogo></BottomLogo>
