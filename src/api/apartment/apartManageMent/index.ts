@@ -7,7 +7,7 @@ import type {
     DeleteAllData, FacilityListALLData,
     FeeValueListAllData, GetDetailAllData, LabelListAllData,
     ProvinceAllData, SaveOrUpdateDataReaultAllData
-} from "@/api/apartment/type";
+} from "@/api/apartment/apartManageMent/type";
 import type {LocationQueryValue} from "vue-router";
 
 //枚举公寓管理的所有接口s

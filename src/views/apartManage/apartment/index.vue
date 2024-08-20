@@ -5,13 +5,13 @@ defineOptions({
   name: 'apartMent'
 })
 import {onMounted, reactive, ref, watch} from 'vue'
-import {reqApartment, reqAreaList, reqListByProvince, reqListCity, reqRemoveById} from "@/api/apartment";
+import {reqApartment, reqAreaList, reqListByProvince, reqListCity, reqRemoveById} from "@/api/apartment/apartManageMent";
 import type {
   ApartmantAllData, ApartmantQueryForm, AreaAllData,
   CityAllData, DeleteAllData,
   ProvinceAllData,
   Records
-} from "@/api/apartment/type";
+} from "@/api/apartment/apartManageMent/type";
 import PagiNation from "@/components/PagiNation/index.vue";
 import BottomLogo from "@/components/BottomLogo/index.vue";
 import useLayOutsettingStore from "@/stores/modules/setting";

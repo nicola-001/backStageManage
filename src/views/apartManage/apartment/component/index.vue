@@ -17,14 +17,14 @@ import {
   reqLabelList,
   reqListByProvince,
   reqListCity, reqSaveOrUpdate
-} from "@/api/apartment";
+} from "@/api/apartment/apartManageMent";
 import type {
   addressDetailList,
   FacilityListALLData,
   FeeValueListAllData, ImgList,
   LabelListAllData,
   ProvinceAllData, SaveOrUpdateData, SaveOrUpdateDataReaultAllData, TreeData,
-} from "@/api/apartment/type";
+} from "@/api/apartment/apartManageMent/type";
 import messageBox from "@/untils/MessageBox";
 import axios from "axios";
 import {useRoute} from "vue-router";
