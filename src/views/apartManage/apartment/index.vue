@@ -4,12 +4,16 @@ import {Delete, Plus, Refresh, Search, Setting, Edit} from "@element-plus/icons-
 defineOptions({
   name: 'apartMent'
 })
-import {onMounted, reactive, ref, watch} from 'vue'
-import {reqApartment, reqAreaList, reqListByProvince, reqListCity, reqRemoveById} from "@/api/apartment/apartManageMent";
+import {nextTick, onMounted, reactive, ref, watch} from 'vue'
+import {
+  reqApartment,
+  reqAreaList,
+  reqListCity,
+  reqRemoveById
+} from "@/api/apartment/apartManageMent";
 import type {
-  ApartmantAllData, ApartmantQueryForm, AreaAllData,
+  ApartmantAllData, AreaAllData,
   CityAllData, DeleteAllData,
-  ProvinceAllData,
   Records
 } from "@/api/apartment/apartManageMent/type";
 import PagiNation from "@/components/PagiNation/index.vue";
@@ -19,6 +23,7 @@ import TableManage from "@/components/tableManage/index.vue";
 import {useRouter} from "vue-router";
 import {ArrowUp, ArrowDown} from '@element-plus/icons-vue';
 import Message from "@/untils/MessageBox";
+import ApartMeantRoomTop from "@/components/apartMentRoomTop/index.vue";
 // 引入仓库的数据
 const settingStore = useLayOutsettingStore()
 // 表头数据
@@ -39,7 +44,7 @@ const total = ref(0)
 // 存储公寓管理请求回的数据
 let apartmentData: Records[] = reactive([])
 // 定义根据条件分页查询公寓列表
-const QueryForm: ApartmantQueryForm = reactive({
+const QueryForm: any = reactive({
   current: 1,//当前所在页
   size: 10,//当前所在页数大小
   provinceId: undefined,//省份id
@@ -50,22 +55,23 @@ const QueryForm: ApartmantQueryForm = reactive({
 const tableManageRef = ref()
 // from表单控制是否折叠 展开
 const isExtend = ref<boolean>(true)
-// 存储获取省份数据
-const province: any = reactive({})
+
 // 存储获取城市数据
 let city: any = ref({})
 // 存数获取地区数据
 const area: any = ref({})
 // 获取数据
-const getApartment = async () => {
-  const result: ApartmantAllData = await reqApartment(QueryForm)
-  if (result.code == 200) {
-    // 将请求之前的数据置空
-    apartmentData.length = 0
-    // 将请求回的数据赋值给 apartmentData  深拷贝-内容  浅拷贝-地址
-    Object.assign(apartmentData, result.data.records)
-    total.value = result.data.total
-  }
+const getApartment = () => {
+  nextTick(async () => {
+    const result: ApartmantAllData = await reqApartment(QueryForm)
+    if (result.code == 200) {
+      // 将请求之前的数据置空
+      apartmentData.length = 0
+      // 将请求回的数据赋值给 apartmentData  深拷贝-内容  浅拷贝-地址
+      Object.assign(apartmentData, result.data.records)
+      total.value = result.data.total
+    }
+  })
 }
 // 刷新按钮
 const refresh = () => {
@@ -84,13 +90,6 @@ const addManagement = () => {
 const updateOPeration = (row: any) => {
   // 路由跳转
   router.push({name: "addOrUpdatePage", query: {itemDataID: row.id}})
-}
-//获取查询省份信息列表
-const getListByProvince = async () => {
-  const result: ProvinceAllData = await reqListByProvince()
-  if (result.code == 200) {
-    Object.assign(province, result.data)
-  }
 }
 // 事件监听  若有id则发送请求 获取城市列表
 watch(() => QueryForm.provinceId, async () => {
@@ -127,18 +126,8 @@ const getAreaList = async () => {
 onMounted(() => {
   // 获取表格内数据
   getApartment()
-  //获取查询省份信息列表
-  getListByProvince()
 })
-// 搜索按钮
-const goSearch = async () => {
-  await getApartment()
-}
-// 重置按钮
-const goReset = () => {
-  // 刷新操作
-  settingStore.refresh = !settingStore.refresh
-}
+
 // 删除按钮的回调
 const deleteItem = async (id: number) => {
   const result: DeleteAllData = await reqRemoveById(id)
@@ -149,41 +138,21 @@ const deleteItem = async (id: number) => {
     await getApartment()
   }
 }
+
+// 获取到子组件传递过来的数据
+const getData = (provinceId: number, cityId: number, districtId: number) => {
+  console.log("provinceId:", provinceId, "cityId", cityId, "districtId", districtId)
+  QueryForm.cityId = cityId
+  QueryForm.districtId = districtId
+  QueryForm.provinceId = provinceId
+}
 </script>
 
 <template>
   <el-card>
     <div class="apartment_container">
       <!--顶部表单-->
-      <el-form :inline="true">
-        <div class="apartment_top">
-          <el-form-item label="省份：">
-            <el-select class="select" v-model="QueryForm.provinceId" placeholder="请选择省份" clearable>
-              <el-option v-for="item in province" :key="item.id" :label="item.name" :value="item.id"/>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="城市：">
-            <el-select class="select" v-model="QueryForm.cityId" placeholder="请选择城市" clearable>
-              <el-option v-for="item in city" :key="item.id" :label="item.name" :value="item.id"/>
-            </el-select>
-          </el-form-item>
-          <el-form-item v-if="isExtend" label="区域：" class="area">
-            <el-select class="select" placeholder="请选择区域：" clearable v-model="QueryForm.districtId">
-              <el-option v-for="item in area" :value="item.id" :label="item.name" :key="item.id"/>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" :icon="Search" @click="goSearch">搜索</el-button>
-            <el-button :icon="Delete" @click="goReset">重置</el-button>
-            <el-button type="primary" link @click="isExtend=!isExtend" class="control">
-              {{ isExtend ? '合并' : '展开' }}
-              <el-icon>
-                <component :is="isExtend ? ArrowUp : ArrowDown"/>
-              </el-icon>
-            </el-button>
-          </el-form-item>
-        </div>
-      </el-form>
+      <ApartMeantRoomTop :sentData="getData" :getPageItem="getApartment"></ApartMeantRoomTop>
       <el-form v-if="false">
         <el-form-item style="float: right">
           <el-button type="primary" :icon="Search">搜索</el-button>
@@ -271,20 +240,14 @@ const deleteItem = async (id: number) => {
 
 <style scoped lang="scss">
 .apartment_container {
-  .apartment_top {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
+  padding: 30px 20px;
+  .select {
+    width: 180px;
+    height: 30px;
+  }
 
-    .select {
-      width: 180px;
-      height: 30px;
-    }
-
-    .extend:hover {
-      cursor: pointer;
-    }
-
+  .extend:hover {
+    cursor: pointer;
   }
 
   .apartment_bottom {

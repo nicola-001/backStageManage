@@ -42,9 +42,9 @@ export const reqApartment = (queryForm: ApartmantQueryForm) => request.get<any, 
 //获取查询省份信息列表
 export const reqListByProvince = () => request.get<any, ProvinceAllData>(API.PROVINCELIST_URL)
 // 根据省份id获取城市列表
-export const reqListCity = (id: number) => request.get<any, CityAllData>(API.CITYLIST_URL + `id=${id}`)
+export const reqListCity = (id: number | undefined) => request.get<any, CityAllData>(API.CITYLIST_URL + `id=${id}`)
 // 根据城市id获取城市列表
-export const reqAreaList = (id: number) => request.get<any, AreaAllData>(API.AREALIST_URL + `id=${id}`)
+export const reqAreaList = (id: number | undefined) => request.get<any, AreaAllData>(API.AREALIST_URL + `id=${id}`)
 // 根据id删除公寓信息
 export const reqRemoveById = (id: number) => request.delete<any, DeleteAllData>(API.REMOVEBYID_URL + `id=${id}`)
 // 新增或更改用户信息

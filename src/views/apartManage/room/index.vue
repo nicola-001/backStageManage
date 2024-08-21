@@ -1,27 +1,34 @@
 <script lang="ts">
 export default {
-  name: 'ROOM'
+  name: 'ROOM_MANAGEMENT'
 }
 </script>
 <script setup lang="ts">
 
-import {Delete, Edit, Plus, Refresh, Search, Setting} from "@element-plus/icons-vue";
+import {Delete, Edit, Plus, Refresh, Setting} from "@element-plus/icons-vue";
 import BottomLogo from "@/components/BottomLogo/index.vue";
-import {onMounted, reactive, ref} from "vue";
+import {nextTick, onMounted, reactive, ref} from "vue";
 import {reqRoomPageItem} from "@/api/apartment/roomManageMent";
 import PagiNation from "@/components/PagiNation/index.vue";
+import ApartMeantRoomTop from "@/components/apartMentRoomTop/index.vue";
+import useLayOutsettingStore from "@/stores/modules/setting";
 
-const paginationNumber = reactive({
+// 获取仓库中的数据用于刷新操作
+const useSettingStore = useLayOutsettingStore();
+// 收集请求数据接口的参数
+const QueryForm: any = reactive({
   current: 1,//当前所在页
   size: 10,//当前所在页数大小
   provinceId: undefined,//省份id
   cityId: undefined,//城市id
-  districtId: undefined,//区域id
+  districtId: undefined//区域id
 })
-const total = ref(0)
-// 保存请求返回的数据
-const recordsData = reactive([])
 
+// 返回的总条数
+const total = ref(0)
+
+// 保存请求form返回的数据
+const recordsData = reactive([])
 // 准备table中数据
 const tableData = reactive([
   {name: "房间号", display: true, order: false, prop: 'roomNumber'},
@@ -34,50 +41,47 @@ const tableData = reactive([
   {name: "发布状态", display: true, order: false, prop: 'isRelease'}
 ])
 // 获取数据
-const getRoomPageItem = async () => {
-  const result = await reqRoomPageItem(paginationNumber)
-  if (result.code === 200) {
-    // 请求数据前将存储数据的容器置空
-    recordsData.length = 0
-    // 将获取到的数据存数到
-    Object.assign(recordsData, result.data.records)
-    total.value = result.data.total
-  }
+const getRoomPageItem = () => {
+  // setup函数在beforeCreate之前执行，当父组件异步获取数据并传递给子组件时，子组件可能无法实时响应
+  nextTick(async () => {
+    const result = await reqRoomPageItem(QueryForm)
+    if (result.code === 200) {
+      // 请求数据前将存储数据的容器置空
+      recordsData.length = 0
+      // 将获取到的数据存数到
+      Object.assign(recordsData, result.data.records)
+      total.value = result.data.total
+    }
+  })
 }
-// 获取省份信息
-
+// 挂载时
 onMounted(() => {
   // 获取数据
   getRoomPageItem()
 })
+// 获取到子组件传递过来的数据
+const getData = (provinceId: number, cityId: number, districtId: number) => {
+  console.log("provinceId:", provinceId, "cityId", cityId, "districtId", districtId)
+  QueryForm.cityId = cityId
+  QueryForm.districtId = districtId
+  QueryForm.provinceId = provinceId
+}
+
+// 刷新按钮的回调
+const reFresh = () => {
+  // 控制dom刷新
+  useSettingStore.refresh = !useSettingStore.refresh
+}
+
 </script>
 
 <template>
   <el-card class="roomManage_container">
     <!--顶部-选择省份-城市-区域-->
-    <div class="roomManage_top">
-      <el-form :inline="true">
-        <el-form-item label="省份">
-          <el-select placeholder="请选择省份" style="width: 200px"></el-select>
-        </el-form-item>
-        <el-form-item label="城市">
-          <el-select placeholder="请选择城市" style="width: 200px"></el-select>
-        </el-form-item>
-        <el-form-item label="区域">
-          <el-select placeholder="请选择区域" style="width: 200px"></el-select>
-        </el-form-item>
-        <el-form-item label="公寓">
-          <el-select placeholder="请选择公寓" style="width: 200px"></el-select>
-        </el-form-item>
-      </el-form>
-      <div style="display: flex">
-        <el-button :icon="Search" type="primary">搜索</el-button>
-        <el-button :icon="Delete">重置</el-button>
-      </div>
-    </div>
+    <ApartMeantRoomTop :sentData="getData" :getPageItem="getRoomPageItem"/>
     <div class="roomManage_Center">
       <!--新增房间-->
-      <div style="display: flex;justify-content: space-between;margin: 15px 0">
+      <div style="display: flex;justify-content: space-between;margin: 20px 0">
         <el-button type="primary" :icon="Plus">新增房间</el-button>
         <div>
           <el-tooltip
@@ -86,7 +90,7 @@ onMounted(() => {
               content="刷新"
               placement="bottom"
           >
-            <el-button :icon="Refresh" circle/>
+            <el-button :icon="Refresh" circle size="small" @click="reFresh"/>
           </el-tooltip>
           <el-tooltip
               class="box-item"
@@ -94,7 +98,7 @@ onMounted(() => {
               content="列设置"
               placement="bottom"
           >
-            <el-button type="info" :icon="Setting" circle/>
+            <el-button type="info" :icon="Setting" circle size="small"/>
           </el-tooltip>
         </div>
       </div>
@@ -121,9 +125,15 @@ onMounted(() => {
             <el-button :icon="Delete" type="danger" size="small">删除</el-button>
           </template>
         </el-table-column>
+        <template #empty>
+          <div style="margin-top: 30px">
+            <img src="/src/assets/images/notData.png" alt="notData"/>
+            <div>暂无数据</div>
+          </div>
+        </template>
       </el-table>
       <!--分页器-->
-      <PagiNation v-model:current="paginationNumber.current" v-model:size="paginationNumber.size"
+      <PagiNation v-model:current="QueryForm.current" v-model:size="QueryForm.size"
                   v-model:total="total"
                   @getTableData="getRoomPageItem"></PagiNation>
     </div>
@@ -133,11 +143,6 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .roomManage_container {
-  .roomManage_top {
-    display: flex;
-    justify-content: space-between;
-    margin: 15px 0;
-  }
-
+  padding: 30px 20px;
 }
 </style>
