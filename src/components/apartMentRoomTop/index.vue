@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {ArrowDown, ArrowUp, Delete, Search} from "@element-plus/icons-vue";
 import {onMounted, ref, watch} from "vue";
-import {reqAreaList, reqListByProvince, reqListCity} from "@/api/apartment/apartManageMent";
+import {reqApartmentList, reqAreaList, reqListByProvince, reqListCity} from "@/api/apartment/apartManageMent";
 import type {ProvinceAllData} from "@/api/apartment/apartManageMent/type";
 import useLayOutsettingStore from "@/stores/modules/setting";
 //定义组件名称
@@ -17,9 +17,11 @@ let provinceData: any = ref({})
 let cityData: any = ref({})
 // 存储区域信息
 let arrList: any = ref({})
+// 存储公寓信息
+let apartMent: any = ref({})
 
 // 获取父组件传递过来的数据 - 获取表单数据的回调
-const props = defineProps(['getPageItem', 'sentData'])
+const props = defineProps(['getPageItem', 'sentData','isApartment'])
 
 // 存储省份id
 const provinceId: any = ref(undefined)
@@ -27,6 +29,8 @@ const provinceId: any = ref(undefined)
 const cityId: any = ref(undefined)
 // 存储区域id
 const districtId: any = ref(undefined)
+// 存储公寓id
+const apartmentId: any = ref(undefined)
 
 // 控制表单是否折叠 -> 展开
 const isExtend = ref<boolean>(true)
@@ -51,7 +55,17 @@ const getAreaList = async () => {
   const result = await reqAreaList(cityId.value)
   if (result.code == 200) {
     arrList.value = result.data
+    console.log('arrList.value',arrList.value)
   }
+}
+// 获取公寓请求
+const getApartmentList = async () => {
+  const result = await reqApartmentList(districtId.value)
+  if (result.code == 200) {
+    apartMent.value = result.data
+    console.log('apartmentId',result.data)
+  }
+
 }
 
 
@@ -69,6 +83,11 @@ watch(cityId, () => {
   getAreaList()
   //若城市id发生变化则清空区域数据
   districtId.value = undefined
+})
+// 监听事件根据区域的变化，获取公寓的数据
+watch(districtId, () => {
+  // 获取公寓数据
+  getApartmentList()
 })
 
 // 搜索按钮的回调
@@ -124,6 +143,18 @@ onMounted(() => {
           />
         </el-select>
       </el-form-item>
+      <div v-if="props.isApartment">
+        <el-form-item label="公寓" v-if="isExtend">
+          <el-select placeholder="请选择公寓" v-model="apartmentId" style="width: 200px" clearable>
+            <el-option
+                v-for="item in apartMent"
+                :key="item.id"
+                :label="item.introduction"
+                :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+      </div>
     </el-form>
     <el-button :icon="Search" type="primary" @click="goSearch">搜索</el-button>
     <el-button :icon="Delete" @click="goReset">重置</el-button>

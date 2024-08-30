@@ -18,8 +18,10 @@ enum API {
     PROVINCELIST_URL = '/admin/region/province/list?',
 //     根据省份id获取城市信息列表
     CITYLIST_URL = '/admin/region/city/listByProvinceId?',
-//     根据城市id获取城市信息列表
+//     根据城市id获取区域信息列表
     AREALIST_URL = '/admin/region/district/listByCityId?',
+//     根据区域信息列表获取公寓信息列表
+    APARTMENTList_URL = '/admin/apartment/listInfoByDistrictId?',
 //    根据id删除公寓信息
     REMOVEBYID_URL = '/admin/apartment/removeById?',
 //     新增或更新用户信息
@@ -34,6 +36,8 @@ enum API {
     FILEUPLOAD_URL = '/admin/file/upload',
 //     根据id获取公寓详情信息
     GETDETAILBYID = '/admin/apartment/getDetailById?',
+//     根据id获取房间信息
+    GETROOMBYID_URL = '/admin/room/getDetailById?'
 
 }
 
@@ -43,8 +47,10 @@ export const reqApartment = (queryForm: ApartmantQueryForm) => request.get<any, 
 export const reqListByProvince = () => request.get<any, ProvinceAllData>(API.PROVINCELIST_URL)
 // 根据省份id获取城市列表
 export const reqListCity = (id: number | undefined) => request.get<any, CityAllData>(API.CITYLIST_URL + `id=${id}`)
-// 根据城市id获取城市列表
+// 根据城市id获取区域列表
 export const reqAreaList = (id: number | undefined) => request.get<any, AreaAllData>(API.AREALIST_URL + `id=${id}`)
+// 根据区域id获取公寓列表
+export const reqApartmentList = (id: number | undefined) => request.get<any, any>(API.APARTMENTList_URL + `id=${id}`)
 // 根据id删除公寓信息
 export const reqRemoveById = (id: number) => request.delete<any, DeleteAllData>(API.REMOVEBYID_URL + `id=${id}`)
 // 新增或更改用户信息
@@ -71,3 +77,5 @@ export const reqFileUload = (file: any) => request.post<any, any>(API.FILEUPLOAD
 })
 // 根据id获取公寓详情信息
 export const reqDetailById = (id: string | LocationQueryValue[] | null) => request.get<any, GetDetailAllData>(API.GETDETAILBYID + `id=${id}`)
+//根据id获取房间信息
+export const reqRoomDetailById = (id:any) => request.get(API.GETROOMBYID_URL + `id=${id}`)

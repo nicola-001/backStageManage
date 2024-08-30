@@ -140,19 +140,13 @@ const feeNodeClickHandle = (currentNode: TreeData, currentNodeObj: any) => {
   if (currentNode.parentId) {
     // console.log(currentNode,currentNodeObj)
     nextTick(() => {
-      // let tempArr=[...addOrUpdateData.feeValueIds!]
-      // console.log("过滤之前",addOrUpdateData.feeValueIds)
       //所有子元素的集合
       const childNodesItem = currentNodeObj.parent.childNodes
-      // console.log('id:', currentNodeObj.id, 'childNodesItem', childNodesItem);
       // 便利所有子集元素
       for (let item of childNodesItem) {
-        // console.log('item', item.id)
         // 清空所有的子级元素
         addOrUpdateData.feeValueIds = addOrUpdateData.feeValueIds!.filter(feeValueIdsItem => feeValueIdsItem != item.data.value)
       }
-      // console.log("过滤完成的",addOrUpdateData.feeValueIds)
-      // addOrUpdateData.feeValueIds=tempArr;
       // 将选中的元素放到数组中
       addOrUpdateData.feeValueIds!.push(Number(currentNode.value))
     })
@@ -335,14 +329,15 @@ const getDetailById = async (itemDataID: any) => {
             :model="addOrUpdateData"
             ref="ruleFormRef"
             :rules="rules"
+            label-width="120"
         >
-          <el-form-item label="公寓名称" label-width="100" style="width: 40%" size="default" prop="name">
+          <el-form-item label="公寓名称"  style="width: 40%" size="default" prop="name">
             <el-input v-model="addOrUpdateData.name"/>
           </el-form-item>
-          <el-form-item label="公寓介绍" label-width="100" style="width: 40%" size="small" prop="introduction">
+          <el-form-item label="公寓介绍"  style="width: 40%" size="small" prop="introduction">
             <el-input type="textarea" v-model:="addOrUpdateData.introduction"/>
           </el-form-item>
-          <el-form-item label="所处区域" label-width="100" required>
+          <el-form-item label="所处区域"  required>
             <el-form-item prop="provinceId" style="width: 180px">
               <el-select v-model="addOrUpdateData.provinceId" placeholder="请选择省份" clearable>
                 <el-option
@@ -374,7 +369,7 @@ const getDetailById = async (itemDataID: any) => {
               </el-select>
             </el-form-item>
           </el-form-item>
-          <el-form-item label="详细地址" label-width="100" style="width: 40%" prop="addressDetail">
+          <el-form-item label="详细地址"  style="width: 40%" prop="addressDetail">
             <el-select
                 v-model="addOrUpdateData.addressDetail"
                 filterable
@@ -393,16 +388,16 @@ const getDetailById = async (itemDataID: any) => {
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="公寓前台电话" label-width="100" style="width: 40%" prop="phone">
+          <el-form-item label="公寓前台电话"  style="width: 40%" prop="phone">
             <el-input placeholder="请输入公寓前台电话" v-model="addOrUpdateData.phone"/>
           </el-form-item>
-          <el-form-item label="是否发布" label-width="100">
+          <el-form-item label="是否发布" >
             <el-radio-group v-model="addOrUpdateData.isRelease">
               <el-radio :value="0" size="small">未发布</el-radio>
               <el-radio :value="1" size="small">已发布</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="公寓配套" label-width="100" style="width: 40%">
+          <el-form-item label="公寓配套"  style="width: 40%">
             <el-select v-model="addOrUpdateData.facilityInfoIds" placeholder="请选择公寓配套" clearable multiple>
               <el-option
                   v-for="item in facilityData"
@@ -412,7 +407,7 @@ const getDetailById = async (itemDataID: any) => {
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="公寓标签" label-width="100" style="width: 40%">
+          <el-form-item label="公寓标签"  style="width: 40%">
             <el-select v-model="addOrUpdateData.labelIds" placeholder="请选择公寓标签" clearable multiple>
               <el-option
                   v-for="item in labelListData"
@@ -422,18 +417,17 @@ const getDetailById = async (itemDataID: any) => {
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="公寓杂费" label-width="100" style="width: 40%">
+          <el-form-item label="公寓杂费"  style="width: 40%">
             <el-tree-select
                 v-model="addOrUpdateData.feeValueIds"
                 placeholder="请选择公寓杂费"
                 :data="feeValueIds"
                 multiple
                 clearable
-                :render-after-expand="true"
                 @node-click="feeNodeClickHandle"
             ></el-tree-select>
           </el-form-item>
-          <el-form-item label="图片" label-width="100" prop="graphVoList">
+          <el-form-item label="图片"  prop="graphVoList">
             <el-upload
                 v-model:file-list="addOrUpdateData.graphVoList"
                 action="#"
@@ -471,6 +465,7 @@ const getDetailById = async (itemDataID: any) => {
 
 <style scoped lang="scss">
 .container {
+  padding: 5px;
   .addHeader {
     h1 {
       font-weight: 800;

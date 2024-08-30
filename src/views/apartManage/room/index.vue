@@ -8,10 +8,14 @@ export default {
 import {Delete, Edit, Plus, Refresh, Setting} from "@element-plus/icons-vue";
 import BottomLogo from "@/components/BottomLogo/index.vue";
 import {nextTick, onMounted, reactive, ref} from "vue";
-import {reqRoomPageItem} from "@/api/apartment/roomManageMent";
+import {reqRemoveById, reqRoomPageItem} from "@/api/apartment/roomManageMent";
 import PagiNation from "@/components/PagiNation/index.vue";
 import ApartMeantRoomTop from "@/components/apartMentRoomTop/index.vue";
 import useLayOutsettingStore from "@/stores/modules/setting";
+import TableManage from "@/components/tableManage/index.vue";
+import {ElMessage, ElMessageBox} from "element-plus";
+import messageBox from "@/untils/MessageBox";
+import router from "@/router";
 
 // 获取仓库中的数据用于刷新操作
 const useSettingStore = useLayOutsettingStore();
@@ -23,6 +27,8 @@ const QueryForm: any = reactive({
   cityId: undefined,//城市id
   districtId: undefined//区域id
 })
+// 控制是否展示选择公寓
+const isApartment=ref(true)
 
 // 返回的总条数
 const total = ref(0)
@@ -40,6 +46,8 @@ const tableData = reactive([
   {name: "入住状态", display: true, order: false, prop: 'isCheckIn'},
   {name: "发布状态", display: true, order: false, prop: 'isRelease'}
 ])
+// 获取自定义列标题组建设
+const tableManageRef = ref()
 // 获取数据
 const getRoomPageItem = () => {
   // setup函数在beforeCreate之前执行，当父组件异步获取数据并传递给子组件时，子组件可能无法实时响应
@@ -72,17 +80,49 @@ const reFresh = () => {
   // 控制dom刷新
   useSettingStore.refresh = !useSettingStore.refresh
 }
+// 列设置
+const settingData = () => tableManageRef.value.openTable();
 
+// 删除按钮的回调
+const openBox = (row: any) => {
+  console.log(row)
+  ElMessageBox.confirm(
+      `你确定要删除${row.apartmentInfo.name}-${row.roomNumber}号房间吗？`,
+      '温馨提示',
+      {confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning',}
+  )
+      .then(
+          async () => {
+            const result: any = await reqRemoveById(row.id)
+            if (result.code === 200) {
+              // 重新获取数据
+              getRoomPageItem()
+              messageBox.messageInfo('success', '删除成功')
+            }
+
+          }
+      )
+      .catch(() => messageBox.messageInfo('warring', '已取消'))
+}
+// 新增房间
+const addOrUpdate=()=>{
+  router.push({name: "AddOrUpdateRoom"})
+}
+const updateOperate=(row:any)=>{
+  console.log(row.id)
+  router.push({name: "AddOrUpdateRoom", query:{ItemId:row.id}})
+}
 </script>
 
 <template>
   <el-card class="roomManage_container">
     <!--顶部-选择省份-城市-区域-->
-    <ApartMeantRoomTop :sentData="getData" :getPageItem="getRoomPageItem"/>
+    <ApartMeantRoomTop :sentData="getData" :getPageItem="getRoomPageItem" :isApartment="isApartment"/>
+    <!--表单-->
     <div class="roomManage_Center">
       <!--新增房间-->
       <div style="display: flex;justify-content: space-between;margin: 20px 0">
-        <el-button type="primary" :icon="Plus">新增房间</el-button>
+        <el-button type="primary" :icon="Plus" @click="addOrUpdate">新增房间</el-button>
         <div>
           <el-tooltip
               class="box-item"
@@ -98,14 +138,15 @@ const reFresh = () => {
               content="列设置"
               placement="bottom"
           >
-            <el-button type="info" :icon="Setting" circle size="small"/>
+            <el-button type="info" :icon="Setting" circle size="small" @click="settingData"/>
           </el-tooltip>
         </div>
       </div>
       <!--表格-->
       <el-table border style="width: 100%;margin: 15px 0" :data="recordsData">
         <template v-for="(item,index) in tableData" :key="index">
-          <el-table-column :label="item.name" align="center" :prop="item.prop">
+          <el-table-column v-if="item.display" :sortable="item.order" show-overflow-tooltip :label="item.name"
+                           align="center" :prop="item.prop">
             <template #default="{row}">
               <!--table中现实不同的状态-->
               <!--入住状态-->
@@ -121,8 +162,8 @@ const reFresh = () => {
         <!--操作-->
         <el-table-column align="center" label="操作" width="180">
           <template #default="{row}">
-            <el-button :icon="Edit" type="success" size="small">修改</el-button>
-            <el-button :icon="Delete" type="danger" size="small">删除</el-button>
+            <el-button :icon="Edit" type="success" size="small" @click="updateOperate(row)">修改</el-button>
+            <el-button :icon="Delete" type="danger" @click="openBox(row)" size="small">删除</el-button>
           </template>
         </el-table-column>
         <template #empty>
@@ -137,8 +178,12 @@ const reFresh = () => {
                   v-model:total="total"
                   @getTableData="getRoomPageItem"></PagiNation>
     </div>
+    <!--底部logo-->
     <BottomLogo></BottomLogo>
   </el-card>
+  <!--  弹出层设置-->
+  <!--弹出框列设置按钮-->
+  <table-manage ref="tableManageRef" :drawer-data="tableData"></table-manage>
 </template>
 
 <style scoped lang="scss">

@@ -60,6 +60,9 @@ const isExtend = ref<boolean>(true)
 let city: any = ref({})
 // 存数获取地区数据
 const area: any = ref({})
+// 控制是否展示选择公寓
+const isApartment=ref(false)
+
 // 获取数据
 const getApartment = () => {
   nextTick(async () => {
@@ -152,7 +155,7 @@ const getData = (provinceId: number, cityId: number, districtId: number) => {
   <el-card>
     <div class="apartment_container">
       <!--顶部表单-->
-      <ApartMeantRoomTop :sentData="getData" :getPageItem="getApartment"></ApartMeantRoomTop>
+      <ApartMeantRoomTop :sentData="getData" :getPageItem="getApartment" :isApartment="isApartment"></ApartMeantRoomTop>
       <el-form v-if="false">
         <el-form-item style="float: right">
           <el-button type="primary" :icon="Search">搜索</el-button>

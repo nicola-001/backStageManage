@@ -101,6 +101,17 @@ export const constentRoute = [
                 }
             },
             {
+                path: '/apartment/apart/AddOrUpdateRoom',
+                name: "AddOrUpdateRoom",
+                component: () => import('@/views/apartManage/room/component/index.vue'),
+                meta: {
+                    icon: 'House',
+                    title: '公寓管理',
+                    hidden: true,
+                    activeMenu: '/apartment/room'
+                },
+            },
+            {
                 path: '/apartment/attribute',
                 component: () => import('@/views/apartManage/attribute/index.vue'),
                 name: 'Attribute',

@@ -10,7 +10,7 @@ enum API {
 //  判断用户名是否可用
     ISUSERNAMEAVAIABLE_URL = '/admin/system/user/isUserNameAvailable?',
 //   保存或修改用户信息
-    SAVEORUPDATE_URL = '/admin/system/user/saveOrUpdate',
+    SAVEORUPDATE_URL = '/admin/room/saveOrUpdate',
 //     删除用户信息
     DELETEUSER_URL = '/admin/system/user/deleteById?'
 }
@@ -23,6 +23,6 @@ export const reqUpdateStatus = (id: number, status: number) => request.post<any,
 //判断用户名是否可用
 export const reqIsUsernameAvailable = (username: string) => request.get<any, any>(API.ISUSERNAMEAVAIABLE_URL + `username=${username}`)
 //保存或修改用户信息
-export const reqSaveOrUpdate = (data: any) => request.post<any, any>(API.SAVEORUPDATE_URL, data)
+export const reqSaveOrUpdate = (data: any) => request.post(API.SAVEORUPDATE_URL, data)
 //删除用户信息
 export const reqDeleteUser = (id: number) => request.delete<any, any>(API.DELETEUSER_URL + `id=${id}`)

@@ -148,7 +148,7 @@ const confirm = async () => {
   // 表单验证通过后做其余操作
   await fromRef.value.validate()
 //   添加或修改用户信息
-  const result = await reqSaveOrUpdate(userInfo)
+  const result:any = await reqSaveOrUpdate(userInfo)
   if (result.code == 200) {
     Message.messageInfo('success', userInfo.id ? '修改成功' : '添加成功')
     //   重新获取用户数据
