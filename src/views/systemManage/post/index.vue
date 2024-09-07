@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {Delete, Plus, Refresh, Setting} from '@element-plus/icons-vue'
-import {nextTick, onMounted, reactive, ref} from "vue";
+import { onMounted, reactive, ref} from "vue";
 import {reqAddOrUpdate, reqDeletePost, reqPostPage, reqPostStatus} from "@/api/system/post";
 import PagiNation from "@/components/PagiNation/index.vue";
 import BottomLogo from "@/components/BottomLogo/index.vue";

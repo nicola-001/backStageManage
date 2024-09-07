@@ -63,7 +63,6 @@ const getApartmentList = async () => {
   const result = await reqApartmentList(districtId.value)
   if (result.code == 200) {
     apartMent.value = result.data
-    console.log('apartmentId',result.data)
   }
 
 }

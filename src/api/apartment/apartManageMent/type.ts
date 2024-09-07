@@ -99,11 +99,12 @@ export interface FacilityListData {
     type: string,
     name: string,
     icon: string
+
 }
 
-// 根据类型查询配药信息列表返回的全部数据
+// 根据类型查询配套信息列表返回的全部数据
 export interface FacilityListALLData extends ResponseData {
-    data: FacilityListData
+    data: FacilityListData[]
 }
 
 //根据类型查询标签列表返回的数据类型

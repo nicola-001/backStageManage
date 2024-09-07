@@ -151,6 +151,17 @@ export const constentRoute = [
                     title: '租约管理',
                 }
             },
+            {
+                path: '/leasement/lease/AddOrUpdateLease',
+                name: "AddOrUpdateLease",
+                component: () => import('@/views/leaseManage/lease/component/index.vue'),
+                meta: {
+                    icon: 'DocumentRemove',
+                    title: '租约管理',
+                    hidden: true,
+                    activeMenu: '/leasement/lease'
+                },
+            },
         ]
     },
     {

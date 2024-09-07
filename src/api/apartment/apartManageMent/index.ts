@@ -37,8 +37,13 @@ enum API {
 //     根据id获取公寓详情信息
     GETDETAILBYID = '/admin/apartment/getDetailById?',
 //     根据id获取房间信息
-    GETROOMBYID_URL = '/admin/room/getDetailById?'
-
+    GETROOMBYID_URL = '/admin/room/getDetailById?',
+// 根据id查询租约信息
+    AGREEMENT_URL = '/admin/agreement?',
+//   根据id删除租约信息
+    DELETEAGREEMENT_URL = '/admin/agreement/removeById?',
+//     根据id更新租约状态
+    UPDATESTATUBYID_URL = '/admin/agreement/updateStatusById?'
 }
 
 //根据条件分页查询公寓列表
@@ -64,7 +69,7 @@ export const reqSaveOrUpdate = (data: any) => {
     }
 }
 //     根据类型查询配套信息列表
-export const reqFacilityList = (type: string) => request.get<any, FacilityListALLData>(API.FACILITYLIST_URL, {params: {type}})
+export const reqFacilityList = (type?: string) => request.get<any, FacilityListALLData>(API.FACILITYLIST_URL, {params: {type}})
 // 根据类型获取查询列表标签   request.get的第二个参数是config对象 包含params属性
 export const reqLabelList = (type: string) => request.get<any, LabelListAllData>(API.LABEL_LIST_URL, {params: {type}});
 // 获取公寓杂费
@@ -78,4 +83,10 @@ export const reqFileUload = (file: any) => request.post<any, any>(API.FILEUPLOAD
 // 根据id获取公寓详情信息
 export const reqDetailById = (id: string | LocationQueryValue[] | null) => request.get<any, GetDetailAllData>(API.GETDETAILBYID + `id=${id}`)
 //根据id获取房间信息
-export const reqRoomDetailById = (id:any) => request.get(API.GETROOMBYID_URL + `id=${id}`)
+export const reqRoomDetailById = (id: any) => request.get(API.GETROOMBYID_URL + `id=${id}`)
+//根据租约查询租约信息
+export const reqAgreement = (id: any) => request.get(API.AGREEMENT_URL + `id=${id}`)
+//   根据id删除租约信息
+export const reqDeleteAgreement = (id: number) => request.delete(API.DELETEAGREEMENT_URL + `id=${id}`)
+//   根据id更新租约状态
+export const reqUpdateStatusById = (id: number, status: number|string) => request.post(API.UPDATESTATUBYID_URL + `id=${id}&status=${status}`)
