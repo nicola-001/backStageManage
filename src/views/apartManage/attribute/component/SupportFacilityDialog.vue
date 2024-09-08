@@ -65,7 +65,6 @@ const formData = ref({
 })
 // 新增或修改配套信息管理
 const getAddOrUpdateFacility = async () => {
-  console.log('收集完的数据', formData.value)
   const result: any = await reqUpdateOrAddFacility(formData.value)
   if (result.code == 200) {
     messageBox.messageInfo('success', '操作成功')
@@ -97,7 +96,7 @@ defineExpose({
 <template>
   <el-dialog
       v-model="dialogVisible"
-      title="修改公寓配套"
+      :title="`${formData.id?'修改':'新增'}${formData.type=='1'?'房间':'公寓'}配套`"
       style="max-width: 700px"
   >
     <el-form label-width="120"

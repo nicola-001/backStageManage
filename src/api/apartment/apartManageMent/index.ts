@@ -71,7 +71,7 @@ export const reqSaveOrUpdate = (data: any) => {
 //     根据类型查询配套信息列表
 export const reqFacilityList = (type?: string) => request.get<any, FacilityListALLData>(API.FACILITYLIST_URL, {params: {type}})
 // 根据类型获取查询列表标签   request.get的第二个参数是config对象 包含params属性
-export const reqLabelList = (type: string) => request.get<any, LabelListAllData>(API.LABEL_LIST_URL, {params: {type}});
+export const reqLabelList = (type?: string) => request.get<any, LabelListAllData>(API.LABEL_LIST_URL, {params: {type}});
 // 获取公寓杂费
 export const reqFeeList = () => request.get<any, FeeValueListAllData>(API.FEELIST_URL)
 //上传图片按钮的回调

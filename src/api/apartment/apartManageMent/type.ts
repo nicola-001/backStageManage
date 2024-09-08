@@ -112,11 +112,12 @@ export interface LabelListData {
     id: number,
     type: string,
     name: string
+
 }
 
 //根据类型查询标签列表返回的所有数据的接口类型
 export interface LabelListAllData extends ResponseData {
-    data: LabelListData
+    data: LabelListData[]
 }
 
 //查询全部杂费名称和杂费列表的数据
