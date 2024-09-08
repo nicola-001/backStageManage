@@ -57,11 +57,11 @@ export interface attrValueList {
 export interface ATTRListInterface {
     id: number,
     name: string,
-    attrValueList: attrValueList
+    attrValueList: attrValueList[]
 }
 
 export interface ATTRListDataInterface extends ResponseData {
-    data: ATTRListInterface;
+    data: ATTRListInterface[];
 }
 
 //获取支付方式的接口类型

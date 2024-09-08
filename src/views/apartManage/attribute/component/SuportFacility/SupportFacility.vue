@@ -4,9 +4,9 @@ import {reqFacilityList} from "@/api/apartment/apartManageMent";
 import {BuildingTypeTypeMap} from "@/enums/constenmus";
 import {reqDeleteAttribute} from "@/api/apartment/attributeManageMent";
 import messageBox from "@/untils/MessageBox";
-import SupportFacilityDialog from '@/views/apartManage/attribute/component/SupportFacilityDialog.vue'
+import SupportFacilityDialog from '@/views/apartManage/attribute/component/SuportFacility/SupportFacilityDialog.vue'
 import type {FacilityListData} from "@/api/apartment/apartManageMent/type";
-import Icon_svg from "@/components/SvgIcon/icon_svg.vue";
+import Icon_svg from "@/components/Icon_Svg/index.vue";
 
 type SupportFacilityInterface = {
   label: string

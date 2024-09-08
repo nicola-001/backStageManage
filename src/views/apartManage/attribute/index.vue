@@ -5,8 +5,9 @@ export default {
 </script>
 <script setup lang="ts">
 
-import SupportFacility from "@/views/apartManage/attribute/component/SupportFacility.vue";
-import SupportLabel from "@/views/apartManage/attribute/component/SupportLabel.vue";
+import SupportFacility from "@/views/apartManage/attribute/component/SuportFacility/SupportFacility.vue";
+import SupportLabel from "@/views/apartManage/attribute/component/SupportLabel/SupportLabel.vue";
+import SupportRoomBase from "@/views/apartManage/attribute/component/SupportRoomBase/SupportRoomBase.vue";
 </script>
 
 <template>

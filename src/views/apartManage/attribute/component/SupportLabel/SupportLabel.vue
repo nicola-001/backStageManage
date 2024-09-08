@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SuportLabelDialog from "@/views/apartManage/attribute/component/SuportLabelDialog.vue";
+import SuportLabelDialog from "@/views/apartManage/attribute/component/SupportLabel/SuportLabelDialog.vue";
 
 defineOptions({
   name: 'SupportLabel',
@@ -94,7 +94,7 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-card-header {
+.card-header  span{
   font-size: 18px;
   font-weight: bold;
 }
