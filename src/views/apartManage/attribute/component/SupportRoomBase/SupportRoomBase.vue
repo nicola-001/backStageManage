@@ -114,7 +114,7 @@ onMounted(() => {
         <el-popconfirm
             v-for="attr in item.attrValueList"
             :key="attr.id"
-            :title="`修改或删除${item.name}`"
+            :title="`修改或删除${attr.name }`"
             confirm-button-text="删除"
             cancel-button-text="修改"
             cancel-button-type="warning"

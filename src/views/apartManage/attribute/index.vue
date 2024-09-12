@@ -8,6 +8,7 @@ export default {
 import SupportFacility from "@/views/apartManage/attribute/component/SuportFacility/SupportFacility.vue";
 import SupportLabel from "@/views/apartManage/attribute/component/SupportLabel/SupportLabel.vue";
 import SupportRoomBase from "@/views/apartManage/attribute/component/SupportRoomBase/SupportRoomBase.vue";
+import SupportFee from "@/views/apartManage/attribute/component/SupportFee/SupportFee.vue";
 </script>
 
 <template>
@@ -19,6 +20,8 @@ import SupportRoomBase from "@/views/apartManage/attribute/component/SupportRoom
       <SupportLabel></SupportLabel>
       <!--房间基本信息管理-->
       <SupportRoomBase></SupportRoomBase>
+      <!--杂费信息管理-->
+      <SupportFee></SupportFee>
     </div>
   </el-card>
 </template>
