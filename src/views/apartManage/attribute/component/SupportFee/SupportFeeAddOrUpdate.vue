@@ -90,7 +90,7 @@ defineExpose({
 <template>
   <el-dialog
       v-model="dialogVisible"
-      title="新增属性"
+      :title="`${form.id?'修改':'新增'}属性`"
       width="650"
   >
     <el-form

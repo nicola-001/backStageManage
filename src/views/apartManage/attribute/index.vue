@@ -9,6 +9,7 @@ import SupportFacility from "@/views/apartManage/attribute/component/SuportFacil
 import SupportLabel from "@/views/apartManage/attribute/component/SupportLabel/SupportLabel.vue";
 import SupportRoomBase from "@/views/apartManage/attribute/component/SupportRoomBase/SupportRoomBase.vue";
 import SupportFee from "@/views/apartManage/attribute/component/SupportFee/SupportFee.vue";
+import SupportTerm from "@/views/apartManage/attribute/component/SupportTerm/SupportTerm.vue";
 </script>
 
 <template>
@@ -22,6 +23,8 @@ import SupportFee from "@/views/apartManage/attribute/component/SupportFee/Suppo
       <SupportRoomBase></SupportRoomBase>
       <!--杂费信息管理-->
       <SupportFee></SupportFee>
+      <!--租期管理-->
+      <SupportTerm></SupportTerm>
     </div>
   </el-card>
 </template>

@@ -1,5 +1,11 @@
 import request from "@/untils/request";
-import type {FeeAddOrUpdateInter, FeeDeleteById, SaveOrUpdateAttrInter} from "@/api/apartment/attributeManageMent/type";
+import type {
+    DeleteTerm,
+    FeeAddOrUpdateInter,
+    FeeDeleteById,
+    SaveOrUpdateAttrInter,
+    SaveOrUpdateTerm
+} from "@/api/apartment/attributeManageMent/type";
 
 enum API {
 //     删除配套信息
@@ -25,7 +31,11 @@ enum API {
 //     保存或更新杂费值
     FEEATTRADDORUPDATE_URL = '/admin/fee/value/saveOrUpdate',
 //     根据id删除杂费值
-    FEEDELETE_URL = '/admin/fee/value/deleteById?'
+    FEEDELETE_URL = '/admin/fee/value/deleteById?',
+//     保存或更新租期信息
+    TERMADDORUPDATE_URL='/admin/term/saveOrUpdate',
+//     删除租期信息
+    TERMDELETE_URL='/admin/term/deleteById?'
 }
 
 //删除配套信息
@@ -76,3 +86,7 @@ export const reqFeeKeyDelete = (feeKeyId: number) => request.delete(API.FEEKEYDE
 export const reqAttrAddOrUpdate = (data: any) => request.post(API.FEEATTRADDORUPDATE_URL, data)
 //根据id删除杂费值
 export const reqFeeDelete = (id: number) => request.delete<any,FeeDeleteById>(API.FEEDELETE_URL + `id=${id}`)
+//保存或更新租期信息
+export const reqTermAddOrUpdate=(data:any)=>request.post<any,SaveOrUpdateTerm>(API.TERMADDORUPDATE_URL,data)
+//删除租期信息
+export const reqTermDelete=(id:number)=>request.delete<any,DeleteTerm>(API.TERMDELETE_URL+`id=${id}`)

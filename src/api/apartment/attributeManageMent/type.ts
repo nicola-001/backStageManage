@@ -18,3 +18,11 @@ export interface FeeAddOrUpdateInter extends ResponseData {
 export interface FeeDeleteById extends ResponseData {
     data: string
 }
+//保存或更新租期信息
+export interface SaveOrUpdateTerm extends ResponseData {
+    data: string
+}
+//删除租期信息
+export interface DeleteTerm extends ResponseData {
+    data: string
+}

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, reactive, ref} from "vue";
+import { reactive, ref} from "vue";
 import {reqAttrValueSaveOrUpdate} from "@/api/apartment/attributeManageMent";
 import messageBox from "@/untils/MessageBox";
 import type {FormInstance} from "element-plus";
