@@ -10,6 +10,8 @@ import SupportLabel from "@/views/apartManage/attribute/component/SupportLabel/S
 import SupportRoomBase from "@/views/apartManage/attribute/component/SupportRoomBase/SupportRoomBase.vue";
 import SupportFee from "@/views/apartManage/attribute/component/SupportFee/SupportFee.vue";
 import SupportTerm from "@/views/apartManage/attribute/component/SupportTerm/SupportTerm.vue";
+import SupportPayment from "@/views/apartManage/attribute/component/SupportPayment/SupportPayment.vue";
+import BottomLogo from "@/components/BottomLogo/index.vue";
 </script>
 
 <template>
@@ -25,6 +27,10 @@ import SupportTerm from "@/views/apartManage/attribute/component/SupportTerm/Sup
       <SupportFee></SupportFee>
       <!--租期管理-->
       <SupportTerm></SupportTerm>
+      <!--支付方式管理-->
+      <SupportPayment></SupportPayment>
+      <!--底部logo-->
+      <BottomLogo></BottomLogo>
     </div>
   </el-card>
 </template>

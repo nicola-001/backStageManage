@@ -1,9 +1,10 @@
 import request from "@/untils/request";
 import type {
+    DeletePayment,
     DeleteTerm,
     FeeAddOrUpdateInter,
-    FeeDeleteById,
-    SaveOrUpdateAttrInter,
+    FeeDeleteById, PaymentInter,
+    SaveOrUpdateAttrInter, SaveOrUpdatePayment,
     SaveOrUpdateTerm
 } from "@/api/apartment/attributeManageMent/type";
 
@@ -33,9 +34,15 @@ enum API {
 //     根据id删除杂费值
     FEEDELETE_URL = '/admin/fee/value/deleteById?',
 //     保存或更新租期信息
-    TERMADDORUPDATE_URL='/admin/term/saveOrUpdate',
+    TERMADDORUPDATE_URL = '/admin/term/saveOrUpdate',
 //     删除租期信息
-    TERMDELETE_URL='/admin/term/deleteById?'
+    TERMDELETE_URL = '/admin/term/deleteById?',
+//     查询全部支付方式列表
+    PAYMENT_URL = '/admin/payment/list',
+//      保存或更新支付方式
+    PAYMENTADDORUPDATE_URL = '/admin/payment/saveOrUpdate',
+//     删除支付方式
+    DELETEPAYMENT_URL = '/admin/payment/deleteById?'
 }
 
 //删除配套信息
@@ -85,8 +92,14 @@ export const reqFeeKeyDelete = (feeKeyId: number) => request.delete(API.FEEKEYDE
 //保存或更新杂费值信息
 export const reqAttrAddOrUpdate = (data: any) => request.post(API.FEEATTRADDORUPDATE_URL, data)
 //根据id删除杂费值
-export const reqFeeDelete = (id: number) => request.delete<any,FeeDeleteById>(API.FEEDELETE_URL + `id=${id}`)
+export const reqFeeDelete = (id: number) => request.delete<any, FeeDeleteById>(API.FEEDELETE_URL + `id=${id}`)
 //保存或更新租期信息
-export const reqTermAddOrUpdate=(data:any)=>request.post<any,SaveOrUpdateTerm>(API.TERMADDORUPDATE_URL,data)
+export const reqTermAddOrUpdate = (data: any) => request.post<any, SaveOrUpdateTerm>(API.TERMADDORUPDATE_URL, data)
 //删除租期信息
-export const reqTermDelete=(id:number)=>request.delete<any,DeleteTerm>(API.TERMDELETE_URL+`id=${id}`)
+export const reqTermDelete = (id: number) => request.delete<any, DeleteTerm>(API.TERMDELETE_URL + `id=${id}`)
+//查询全部支付方式列表
+export const reqPayment = () => request.get<any, PaymentInter>(API.PAYMENT_URL)
+//保存或更新支付方式
+export const reqAddOrUpdatePayment = (data: any) => request.post<any, SaveOrUpdatePayment>(API.PAYMENTADDORUPDATE_URL, data)
+//删除支付方式
+export const reqDeletePayment = (id: number) => request.delete<any,DeletePayment>(API.DELETEPAYMENT_URL + `id=${id}`)
